@@ -67,7 +67,9 @@ jobs:
 
       - uses: docker/build-push-action@v5
         with:
-          context: .
+          context: parameters-network
+          build-contexts: |
+            parameters-core=parameters-core
           push: true
           tags: ghcr.io/jasonmiller-cc/parameters-network:latest
           cache-from: type=gha

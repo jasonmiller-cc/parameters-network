@@ -28,7 +28,10 @@ tidy:
 	go mod tidy
 
 docker-build:
-	docker build -t $(IMAGE):$(VERSION) -t $(IMAGE):latest .
+	docker buildx build \
+		--build-context parameters-core=../parameters-core \
+		-t $(IMAGE):$(VERSION) -t $(IMAGE):latest \
+		--load .
 
 docker-push:
 	docker push $(IMAGE):$(VERSION)

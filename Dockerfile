@@ -1,13 +1,16 @@
 # syntax=docker/dockerfile:1
-FROM golang:1.22-bookworm AS builder
+FROM golang:1.27-bookworm AS builder
 
 WORKDIR /workspace
 
 # Copy go module files first for layer caching.
 COPY go.mod go.sum ./
 
-# parameters-core is a local replace; copy it alongside.
-COPY ../parameters-core /parameters-core
+# parameters-core is a local replace living in a sibling directory outside
+# this build context; Docker forbids COPY-ing paths outside the primary
+# context, so it's supplied as a named build context instead — see
+# --build-context in the CI workflow / Makefile.
+COPY --from=parameters-core . /parameters-core
 
 RUN go mod download
 
